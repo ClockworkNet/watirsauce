@@ -14,6 +14,8 @@ Levaraging [SauceLabs](https://saucelabs.com) and WatirWebdriver, WatirSauce all
 
 ```
 git clone git@github.com:ClockworkNet/watirsauce.git
+cd watirsauce
+bundle install
 ```
 
 ## Configuration
