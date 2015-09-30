@@ -4,8 +4,6 @@ Watered-down sauces are often gross. So is FED testing. WatirSauce tries to make
 
 Levaraging [SauceLabs](https://saucelabs.com) and WatirWebdriver, WatirSauce allows you to configure a YAML file, run a command, and take screenshots in all of your favorite browsers. It also supports parallel execution. This reduces the amount of time required to test 2 pages on 15 browsers down from 45 minutes to less than 5.
 
-WatirSauce also uses [Traveling Ruby](http://phusion.github.io/traveling-ruby/) from Phusion. This minimizes the dependency on having Ruby setup nicely.
-
 ## Requirements
 
 * SauceLabs account
@@ -15,7 +13,7 @@ WatirSauce also uses [Traveling Ruby](http://phusion.github.io/traveling-ruby/) 
 ## Installation
 
 ```
-gem install watirsauce
+git clone git@github.com:ClockworkNet/watirsauce.git
 ```
 
 ## Configuration
@@ -42,7 +40,7 @@ Note: It is necessary to type `source ~/.bash_profile` or open a new terminal wi
 
 ## How to use
 * cd into the `watirsauce` directory
-* `./watirsauce sample_site_config.yaml`
+* `./bin/watirsauce sample_site_config.yaml`
 * All screenshots will end up in a folder named after the domain. They are named in a pattern like `[path_to_page-browser-combination.png]`.
 
 Screenshots are easily reviewed using OS X Finder, and Quicklook (Space bar and arrow keys) or the Preview App.
