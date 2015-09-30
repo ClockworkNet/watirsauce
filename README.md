@@ -53,4 +53,4 @@ See LICENSE.
 
 ## Credits
 
- * [Andie Leaf](http://clockwork.net/go/leaf/) - author, maintainer
+ * [Andie Leaf](https://github.com/avleaf) - author, maintainer
