@@ -1,4 +1,4 @@
-require 'watir_sauce'
+require 'watirsauce'
 
 module WatirSauce
   class Runner

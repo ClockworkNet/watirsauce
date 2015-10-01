@@ -1,5 +1,4 @@
 module WatirSauce
-  
   class Config
     class << self
 
