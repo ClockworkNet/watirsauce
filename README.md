@@ -18,6 +18,12 @@ cd watirsauce
 bundle install
 ```
 
+## Usage
+
+```
+bundle exec bin/watirsauce
+```
+
 ## Configuration
 
 Two things must be configured to use WatirSauce:
