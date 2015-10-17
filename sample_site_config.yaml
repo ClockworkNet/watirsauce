@@ -6,86 +6,106 @@
 # Required: `driver`, `os`, `version`
 
 browsers: 
-    - 
-      driver:  Internet Explorer
-      os:      Windows 7
-      version: 11
-      iedriver: x64_2.42.0
-      resolution:    1280x1024
-    - 
-      driver:  Internet Explorer
-      os:      Windows 8.1
-      version: 11
-      iedriver: x64_2.42.0
-      resolution:    1280x1024
-    - 
-      driver:  Internet Explorer
-      os:      Windows 7
-      version: 10
-      iedriver: x64_2.42.0
-      resolution:    1280x1024
-    - 
-      driver:  Internet Explorer
-      os:      Windows 7
-      version: 9
-      resolution:    1280x1024
-    - 
-      driver:  Internet Explorer
-      os:      Windows XP
-      version: 8
-      resolution:    1280x1024
-    - 
-      driver:  Internet Explorer
-      os:      Windows 7
-      version: 8
-      resolution:    1280x1024
-    - 
-      driver:  Internet Explorer
-      os:      Windows 8
-      version: 10
-      resolution:    1280x1024
-      iedriver: x64_2.42.0
-    - 
-      driver:  Chrome
-      os:      Windows 7
-      version: 44.0
-      resolution:    1280x1024
-    - 
-      driver:  Firefox
-      os:      Mac 10.10
-      version: 41
-    - 
-      driver:  Firefox
-      os:      Windows 7
-      version: 41
-      resolution: 1280x1024
+    # - 
+    #   driver:  Internet Explorer
+    #   os:      Windows 7
+    #   version: 11
+    #   # iedriver: x64_2.42.0
+    #   resolution:    1280x1024
+    # - 
+    #   driver:  Internet Explorer
+    #   os:      Windows 8.1
+    #   version: 11
+    #   iedriver: x64_2.42.0
+    #   resolution:    1280x1024
+    # - 
+    #   driver:  Internet Explorer
+    #   os:      Windows 7
+    #   version: 10
+    #   iedriver: x64_2.42.0
+    #   resolution:    1280x1024
+    # - 
+    #   driver:  Internet Explorer
+    #   os:      Windows 7
+    #   version: 9
+    #   resolution:    1280x1024
+    # - 
+    #   driver:  Internet Explorer
+    #   os:      Windows XP
+    #   version: 8
+    #   resolution:    1280x1024
+    # - 
+    #   driver:  Internet Explorer
+    #   os:      Windows 7
+    #   version: 8
+    #   resolution:    1280x1024
+    # - 
+    #   driver:  Internet Explorer
+    #   os:      Windows 8
+    #   version: 10
+    #   resolution:    1280x1024
+    #   iedriver: x64_2.42.0
+    # - 
+    #   driver:  Chrome
+    #   os:      Windows 7
+    #   version: 44.0
+    #   resolution:    1280x1024
+    # - 
+    #   driver:  Firefox
+    #   os:      Mac 10.10
+    #   version: 41
+    # - 
+    #   driver:  Firefox
+    #   os:      Windows 7
+    #   version: 41
+    #   resolution: 1280x1024
     - 
       driver:  iPhone
-      version:      8.1
+      version: 9.0
     - 
       driver:  iPad
-      os:      8.1
+      version: 9.0
     - 
-      driver:  Android
-      version: 4.4
-    -
-      driver:  Android
-      version: 4.3
-    -
-      driver:  Android
-      version: 4.2
-    -
-      driver:  Android
-      version: 4.1
+      driver:  iPhone
+      version: 8.4
+    - 
+      driver:  iPad
+      version: 8.4
+    - 
+      driver:  iPhone
+      version: 7.1
+    - 
+      driver:  iPad
+      version: 7.1
+
+    # - 
+    #   driver:  Android
+    #   version: 4.4
+    # -
+    #   driver:  Android
+    #   version: 4.3
+    # -
+    #   driver:  Android
+    #   version: 4.2
+    # -
+    #   driver:  Android
+    #   version: 4.1
+    # - 
+    #   driver:  Android
+    #   version: 5.1
+
+
+# Use Persistent HTTP Client? Helps with some iOS VMs
+persistent_http: true
 
 # How many VMs to run in parallel should WatirSauce try?
-vm_limit: 3
+vm_limit: 6
 
 # Using https? (boolean)
 https: false
 
 # Base domain (www.example.org)
-live_site: www.clockwork.net
+live_site: www-clockwork4.dev.clockwork.net
 
 # The paths to the pages your going to visit
 pages:
@@ -98,10 +118,15 @@ pages:
 # If an action[path] matches a page, it will execute the logic specified
 # Use @browser.browser to access the WatirWebdriver browser
 # Take additional screens with the command "capture_screen"
-actions:
-    - path: "shouldn't_match_anything"
-      logic: |
-        nil
+# Special note: 'home' matches for a root of '/'
+# actions:
+#     - path: home
+#       logic: |
+#         nil
+#         
+#     - path: /blog/
+#       logic: |
+#         @browser.browser.textfield(id: 'field_id').set("a string")
 
 
 #####################################

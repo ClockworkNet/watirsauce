@@ -88,12 +88,16 @@ module WatirSauce
         config["https"] ||= false
       end
 
+      def use_persistent_http?
+        config["persistent_http"] ||= false
+      end
+
       def target
         config["target_url"] ||= "http://#{username}:#{access_key}@ondemand.saucelabs.com:80/wd/hub"
       end
 
       def appium_version
-        config["appium_version"] ||= "1.4.13"
+        config["appium_version"] ||= "1.4.11"
       end
 
     end

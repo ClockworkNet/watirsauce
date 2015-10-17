@@ -59,6 +59,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  net-http-persistent
   sauce
   sauce-connect
   watir-webdriver

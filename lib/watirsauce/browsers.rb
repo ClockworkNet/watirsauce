@@ -2,25 +2,46 @@ module WatirSauce
   module Browsers
     
     class BrowserBuilder
-      attr_accessor :capabilities, :browser_label
+      attr_accessor :capabilities
+
+      DEFAULT_VERSION     = "" # Empty default
+      DEFAULT_OS          = ""
+      DEFAULT_ORIENTATION = "portrait" # if orientation unspecified
+      PLATFORM            = "BrowserBuilder" # Empty for BrowserBuilder
 
       def initialize(req_hash)
-        @version = req_hash["version"].to_s
-        @capabilities = build_capabilites(req_hash)
+        @version     = req_hash.fetch("version").to_s rescue DEFAULT_VERSION
+        @os          = req_hash.fetch("os")           rescue DEFAULT_OS
+        @orientation = req_hash.fetch("orientation")  rescue DEFAULT_ORIENTATION
+        
+        @capabilities = build_capabilities(req_hash)
+        finalize_caps(capabilities)
         add_sc_info(req_hash["sc_owner"]) if WatirSauce::Config.connect?
-      end
 
-      def build_capabilities(arg)
-        # Default to FF
-        caps ||= Selenium::WebDriver::Remote::Capabilities.firefox
-        # Apply to all objects
-        caps["idleTimeout"]    = 180
-        caps["commandTimeout"] = 180
-        caps[:name] = build_job_name
+        self
       end
 
       def browser_label
-        @browser_label = ""
+        unless @os == ""
+          @browser_label ||= "#{self.class::PLATFORM} #{@version} #{@os}"
+        else 
+          @browser_label ||= "#{self.class::PLATFORM} #{@version}"
+        end
+      end
+      
+      private
+
+      def provider_default
+        # Remove version to get the SauceLabs default provided version
+        # if capabilities.fetch("version") == ""
+      end
+
+      def finalize_caps(caps)
+        # Apply to all caps objects
+        caps["idleTimeout"]    = 180
+        caps["commandTimeout"] = 180
+        caps[:name] = build_job_name
+        caps
       end
 
       def build_job_name
@@ -34,142 +55,140 @@ module WatirSauce
     end # BrowserBuilder
 
     class Android < BrowserBuilder
-      def initialize(browser_hash)
-        @orientation = req_hash["orientation"] || "portrait"
-        super
-      end
       
+      DEFAULT_VERSION = "4.4"
+      PLATFORM        = "Android"
+
       def build_capabilities(req_hash)
         caps = Selenium::WebDriver::Remote::Capabilities.android
+        
         caps["platform"]          = "Linux"
         caps["version"]           = @version
         caps["deviceName"]        = "Android Emulator"
         caps["deviceOrientation"] = @orientation
-        super
+        
+        caps
       end
-
-      def browser_label
-        "Android #{@version}"
-      end
-    end
+    end # Android
 
     class Appium < BrowserBuilder
-      def initialize(req_hash)
-        super
-      end
+      
+      DEFAULT_APPIUM  = "1.4.11"
+      DEFAULT_VERSION = "5.1"
+      PLATFORM        = "Appium Android"
 
       def build_capabilities(req_hash)
         caps = Selenium::WebDriver::Remote::Capabilities.android
-        caps["appiumVersion"] = "1.4.11"
+        
+        caps["appiumVersion"] = req_hash.fetch("appium_version") rescue DEFAULT_APPIUM
         caps["deviceName"]    = "Android Emulator"
-        caps["deviceOrientation"] = ["portrait"]
-        caps["browserName"] = "Browser"
-        caps["platformVersion"] = @version
-        caps["platformName"] = "Android"
-        super
-      end
 
-      def browser_label
-        "Android #{@version}"
+        caps["deviceOrientation"] = ["portrait"]
+        caps["browserName"]       = "Browser"
+        caps["platformVersion"]   = @version
+        caps["platformName"]      = "Android"
+        caps
       end
-    end
+    end # Appium
 
     class Chrome < BrowserBuilder
-      def initialize(req_hash)
-        @os = req_hash["os"]
-        super
-      end
+      
+      DEFAULT_VERSION = "45"
+      PLATFORM        = "Chrome"
 
       def build_capabilities(req_hash)
         caps = Selenium::WebDriver::Remote::Capabilities.chrome
         caps.platform = @os
-        super
+        
+        caps
       end
-
-      def browser_label
-        "Chrome #{@version} #{@os}"
-      end
-    end
+    end # Chrome
 
     class Firefox < BrowserBuilder
-      def initialize(req_hash)
-        @os = req_hash["os"]
-        super
-      end
+      
+      DEFAULT_VERSION = "41"
+      DEFAULT_OS      = "Windows 7"
+      PLATFORM        = "Firefox"
 
-      def build_capabilties(req_hash)
+      def build_capabilities(req_hash)
         caps = Selenium::WebDriver::Remote::Capabilities.firefox
         caps.platform = @os
-        super
+      
+        caps
       end
-
-      def browser_label
-        "Firefox #{@version} #{@os}"
-      end
-    end
+    end # Firefox
 
     class InternetExplorer < BrowserBuilder
-      def initialize(req_hash)
-        @os = req_hash["os"]
-        super
-      end
+
+      DEFAULT_VERSION = "11"
+      DEFAULT_OS      = "Windows 7"
+      PLATFORM        = "IE"
 
       def build_capabilities(req_hash)
         caps = Selenium::WebDriver::Remote::Capabilities.internet_explorer
         caps.platform = @os
-        if req_hash["resolution"]
+
+        if req_hash.include?("resolution")
           caps["screen-resolution"] = req_hash["resolution"] 
         end
 
-        if req_hash["iedriver"]
+        if req_hash.include?("iedriver")
           caps["iedriver-version"] = req_hash["iedriver"]
         end
 
-        super
+        caps
       end
-
-      def browser_label
-        "IE #{@version} #{@os}"
-      end
-    end
+    end # InternetExplorer
 
     class IPad < BrowserBuilder
-      def initialize
-        @orientation = req_hash["orientation"] || "portrait"
-        super
-      end
 
-      def build_capabilties(req_hash)
-        caps = Selenium::WebDriver::Remote::Capabilites.iphone
+      DEFAULT_VERSION = "9.0"
+      PLATFORM        = "iPad"
+
+      def build_capabilities(req_hash)
+        caps = Selenium::WebDriver::Remote::Capabilities.iphone
+        
         caps["platform"]          = "OS X 10.10"
-        caps["version"]           = @version
+        caps["version"]           = @version || DEFAULT_VERSION
         caps["deviceName"]        = "iPad Simulator"
         caps["deviceOrientation"] = @orientation
+        
+        caps
       end
-
-      def browser_label
-        "iPad #{@version}"
-      end
-    end
+    end # IPad
 
     class IPhone < BrowserBuilder
-      def initialize
-        @orientation = req_hash["orientation"] || "portrait"
-        super
-      end
+      
+      DEFAULT_VERSION = "9.0"
+      PLATFORM        = "iPhone"
 
-      def build_capabilties(req_hash)
-        caps = Selenium::WebDriver::Remote::Capabilites.iphone
+      def build_capabilities(req_hash)
+        caps = Selenium::WebDriver::Remote::Capabilities.iphone
+        
         caps["platform"]          = "OS X 10.10"
-        caps["version"]           = @version
+        caps["version"]           = @version || DEFAULT_VERSION
         caps["deviceName"]        = "iPhone Simulator"
         caps["deviceOrientation"] = @orientation
+        
+        caps
       end
+    end # IPhone
 
-      def browser_label
-        "iPhone #{@version}"
+    class Safari < BrowserBuilder
+      
+      DEFAULT_OS      = "OS X 10.10"
+      DEFAULT_VERSION = "9.0"
+      PLATFORM        = "Safari"
+
+      def build_capabilities(req_hash)
+        caps = Selenium::WebDriver::Remote::Capabilities.safari
+        
+        caps.platform   = @os
+        caps["version"] = @version
+        
+        caps
       end
-    end
+    end # Safari
 
   end # Browsers
 end # WatirSauce
