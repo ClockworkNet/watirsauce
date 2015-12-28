@@ -10,9 +10,10 @@ module WatirSauce
       prepare_browsers
     end
 
+    # @return [array] capabilities object
     def prepare_browsers
       @pool = @browsers.map do |requested_browser|
-        factory = BrowserFactory.new requested_browser
+        factory = CapabilitiesFactory.new requested_browser
         factory.browser
       end
     end

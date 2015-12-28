@@ -1,14 +1,13 @@
 module WatirSauce
-  class BrowserFactory
+  class CapabilitiesFactory
 
-    attr_reader :browser, :browser_label, :capabilities, 
+    attr_reader :browser, :capabilities,
                 :driver, :orientation, :os, :target, :version
 
     def initialize(req_browser)
-      # require "pry";binding.pry # temporary debug statment
       @capabilities =  build_browser(req_browser)
       @browser = SauceBrowser.new(capabilities)
-    rescue => e
+    rescue => _
       require "pry";binding.pry # temporary debug statment
       WatirSauce.logger.error "Configuration not available: #{req_browser}. Exiting."
       exit 1
