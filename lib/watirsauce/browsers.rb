@@ -22,11 +22,9 @@ module WatirSauce
       end
 
       def browser_label
-        unless @os == ""
-          @browser_label ||= "#{self.class::PLATFORM} #{@version} #{@os}"
-        else 
-          @browser_label ||= "#{self.class::PLATFORM} #{@version}"
-        end
+        (@os == "") ?
+            @browser_label ||= "#{self.class::PLATFORM} #{@version}" :
+            @browser_label ||= "#{self.class::PLATFORM} #{@version} #{@os}"
       end
       
       private
