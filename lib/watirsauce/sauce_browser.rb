@@ -10,9 +10,9 @@ module WatirSauce
       self
     end
     
-    def start_browser 
+    def start_browser
       if WatirSauce::Config.use_persistent_http?
-        start_browser_with_persistent_http 
+        persistent_browser
       else
         @browser = Watir::Browser.new(
           :remote,
@@ -22,7 +22,7 @@ module WatirSauce
       end
     end
 
-    def start_browser_with_persistent_http
+    def persistent_browser
       require 'selenium/webdriver/remote/http/persistent'
       client = Selenium::WebDriver::Remote::Http::Persistent.new
       client.timeout = 300
