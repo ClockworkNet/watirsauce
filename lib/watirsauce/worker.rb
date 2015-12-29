@@ -37,7 +37,7 @@ module WatirSauce
       ensure
         @browser.destroy_browser
       end
-    rescue ::Net::ReadTimeout => e
+    rescue ::Net::ReadTimeout => _
       WatirSauce.logger.error "#{browser_label} timed out."
     end
 
@@ -58,6 +58,17 @@ module WatirSauce
 
     def capture_screen
       browser.screenshot_save(screenshot_file_name)
+
+      # Go to middle of page, take screen
+      half_page_height = %q{window.scrollTo(0,(document.body.scrollHeight / 2))}
+      browser.browser.execute_script(half_page_height)
+      browser.screenshot_save(screenshot_file_name)
+      
+      # go to bottom of page, take screen
+      full_page_height = %q{window.scrollTo(0,document.body.scrollHeight);}
+      browser.browser.execute_script(full_page_height)
+      browser.screenshot_save(screenshot_file_name)
+    
     rescue Selenium::WebDriver::Error::UnknownError
       WatirSauce.logger.warn "Configuration for #{browser_label} Screenshot Failed"
     end
@@ -91,14 +102,7 @@ module WatirSauce
       path = browser.browser.url.match(live_domain).post_match
       
       path = "home" if path == "/"
-      
-      if safe == false 
-        path
-      else 
-        path = path.gsub(/(\/|\.)/,"--").gsub(/(^-+|-+$)/,"")
-      end
-      
-      path
+      (safe == false) ? path : path = path.gsub(/(\/|\.)/, "--").gsub(/(^-+|-+$)/, "")
     end
 
   end
