@@ -2,6 +2,9 @@ module WatirSauce
   class Config
     class << self
 
+      # Current as of 2015-12-28
+      DEFAULT_APPIUM_VERSION = "1.4.16"
+
       def load_config(file)
         @config = YAML.load_file(file)
         register_actions     
@@ -97,7 +100,7 @@ module WatirSauce
       end
 
       def appium_version
-        config["appium_version"] ||= "1.4.11"
+        config["appium_version"] ||= DEFAULT_APPIUM_VERSION
       end
 
     end
