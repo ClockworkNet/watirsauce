@@ -59,25 +59,24 @@ browsers:
     #   os:      Windows 7
     #   version: 41
     #   resolution: 1280x1024
-    - 
-      driver:  iPhone
-      version: 9.0
-    - 
-      driver:  iPad
-      version: 9.0
-    - 
-      driver:  iPhone
-      version: 8.4
-    - 
-      driver:  iPad
-      version: 8.4
-    - 
-      driver:  iPhone
-      version: 7.1
-    - 
-      driver:  iPad
-      version: 7.1
-
+    # - 
+    #   driver:  iPhone
+    #   version: 9.0
+    # - 
+    #   driver:  iPad
+    #   version: 9.0
+    # - 
+    #   driver:  iPhone
+    #   version: 8.4
+    # - 
+    #   driver:  iPad
+    #   version: 8.4
+    # - 
+    #   driver:  iPhone
+    #   version: 7.1
+    # - 
+    #   driver:  iPad
+    #   version: 7.1
     # - 
     #   driver:  Android
     #   version: 4.4
@@ -102,10 +101,10 @@ persistent_http: true
 vm_limit: 6
 
 # Using https? (boolean)
-https: false
+https: true
 
 # Base domain (www.example.org)
-live_site: www-clockwork4.dev.clockwork.net
+live_site: www.clockwork.com
 
 # The paths to the pages your going to visit
 pages:
