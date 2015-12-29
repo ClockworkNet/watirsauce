@@ -6,12 +6,12 @@
 # Required: `driver`, `os`, `version`
 
 browsers: 
-    # - 
-    #   driver:  Internet Explorer
-    #   os:      Windows 7
-    #   version: 11
-    #   # iedriver: x64_2.42.0
-    #   resolution:    1280x1024
+    - 
+      driver:  Internet Explorer
+      os:      Windows 7
+      version: 11
+      # iedriver: x64_2.42.0
+      resolution:    1280x1024
     # - 
     #   driver:  Internet Explorer
     #   os:      Windows 8.1
