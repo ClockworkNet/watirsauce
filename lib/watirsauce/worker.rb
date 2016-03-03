@@ -1,3 +1,4 @@
+require 'pry'
 module WatirSauce
   class Worker
 
@@ -25,7 +26,7 @@ module WatirSauce
       return unless actor
 
       begin
-        @full_paths.each do |path| 
+        @full_paths.each do |path|
           @browser.browser.goto path
           execute_registered_actions
           capture_screen
@@ -42,7 +43,7 @@ module WatirSauce
     end
 
     private
-    
+
     def execute_registered_actions
       path = trimmed_path
       # If the registered action exists, take a screenshot, then
@@ -65,21 +66,21 @@ module WatirSauce
     def screenshot_file_name
       browser_id = browser_label.gsub(/(\s+|\.)/,"-")
       file = File.join(
-        screenshot_dir, 
+        screenshot_dir,
         "#{trimmed_path(true)}---#{browser_id}.png"
         )
-      
+
       if File.exists?(file)
         dupe_number = 0
         while File.exists?(file) do
           dupe_number += 1
           file = File.join(
-            screenshot_dir, 
+            screenshot_dir,
             "#{trimmed_path(true)}---#{browser_id}-#{dupe_number}.png"
             )
         end
       end
-      
+
       file
     end
 
@@ -88,16 +89,18 @@ module WatirSauce
     end
 
     def trimmed_path(safe=false)
-      path = browser.browser.url.match(live_domain).post_match
-      
+
+      # path = browser.browser.url.match(live_domain).post_match
+      parser = URI::Parser.new
+      path = parser.parse(browser.browser.url).path
       path = "home" if path == "/"
-      
-      if safe == false 
+
+      if safe == false
         path
-      else 
+      else
         path = path.gsub(/(\/|\.)/,"--").gsub(/(^-+|-+$)/,"")
       end
-      
+
       path
     end
 
