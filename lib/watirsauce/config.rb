@@ -1,5 +1,8 @@
 module WatirSauce
   class Config
+
+    DEFAULT_APPIUM_VERSION = "1.6.3"
+
     class << self
 
       def load_config(file)
@@ -93,7 +96,7 @@ module WatirSauce
       end
 
       def appium_version
-        config["appium_version"] ||= "1.4.13"
+        DEFAULT_config["appium_version"] ||= DEFAULT_APPIUM_VERSION
       end
 
     end
