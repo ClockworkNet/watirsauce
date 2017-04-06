@@ -10,14 +10,14 @@ module WatirSauce
     DEFAULT_IOS_IPAD_DEVICE_NAME = "iPad Simulator"
 
     ## Default Browser Strings
-    SAUCE_ANDROID = "Android"
-    SAUCE_CHROME  = "Chrome"
-    SAUCE_EDGE    = "Edge"
-    SAUCE_FIREFOX = "Firefox"
-    SAUCE_IE      = "Internet Explorer"
-    SAUCE_IPAD    = "iPad"
-    SAUCE_IPHONE  = "iPhone"
-    SAUCE_SAFARI  = "Safari"
+    SAUCE_ANDROID = "android"
+    SAUCE_CHROME  = "chrome"
+    SAUCE_EDGE    = "edge"
+    SAUCE_FIREFOX = "firefox"
+    SAUCE_IE      = "internet explorer"
+    SAUCE_IPAD    = "ipad"
+    SAUCE_IPHONE  = "iphone"
+    SAUCE_SAFARI  = "safari"
 
     SAUCE_MOBILE_BROWSERS  = [
       SAUCE_ANDROID, 
@@ -35,10 +35,11 @@ module WatirSauce
 
 
     attr_reader :browser, :browser_label, :capabilities, 
-                :driver, :orientation, :os, :target, :version
+                :driver, :orientation, :original, :os, :target, :version
 
     def initialize(req_browser)
-      @driver           = req_browser["driver"]
+      @original         = req_browser
+      @driver           = req_browser["driver"].downcase
       @os               = req_browser["os"]             || nil
       @version          = req_browser["version"].to_s   || nil
       @orientation      = req_browser["orientation"]    || DEFAULT_ORIENTATION
@@ -48,14 +49,17 @@ module WatirSauce
       @resolution       = req_browser["resolution"]     || nil
       @tunnel_owner     = req_browser['sc_owner']       || nil
 
+      setup_capabilities
+    end
+
+    def setup_capabilities
       build_browser_label
       build_capabilities
 
       add_sc_info if WatirSauce::Config.connect?
       @browser = SauceBrowser.new(self)
     rescue
-      WatirSauce.logger.error "Configuration not available: #{req_browser}. Exiting."
-      exit 1
+      WatirSauce.logger.error "Configuration not available: #{original}. Exiting."
     end
 
     def build_capabilities
