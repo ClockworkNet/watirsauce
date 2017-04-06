@@ -96,7 +96,7 @@ module WatirSauce
       end
 
       def appium_version
-        DEFAULT_config["appium_version"] ||= DEFAULT_APPIUM_VERSION
+        config["appium_version"] ||= DEFAULT_APPIUM_VERSION
       end
 
     end
