@@ -11,7 +11,7 @@ module WatirSauce
       @browser            = browser
       @live_domain        = WatirSauce::Config.live_domain
       @full_paths         = WatirSauce::Config.pages
-      @screenshot_dir     = WatirSauce::Config.live_domain
+      @screenshot_dir     = WatirSauce::Config.screenshot_dir
     end
 
     def init_browser

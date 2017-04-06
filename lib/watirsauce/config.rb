@@ -30,6 +30,10 @@ module WatirSauce
         config["live_site"]
       end
 
+      def screenshot_dir
+        @screenshot_dir ||= live_domain + "-" + Time.now.to_i.to_s
+      end
+
       def paths
         config["pages"]
       end
