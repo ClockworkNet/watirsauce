@@ -43,13 +43,16 @@ module WatirSauce
         caps["platformName"]       = "Android"
       when "Chrome"
         caps = Selenium::WebDriver::Remote::Capabilities.chrome
-        caps.platform = @os
+        caps["platform"] = @os
+      when "Edge"
+        caps = Selenium::WebDriver::Remote::Capabilities.edge
+        caps["platform"] = @os
       when "Firefox"
         caps = Selenium::WebDriver::Remote::Capabilities.firefox
-        caps.platform = @os
+        caps["platform"] = @os
       when "Internet Explorer"
         caps = Selenium::WebDriver::Remote::Capabilities.internet_explorer
-        caps.platform             = @os
+        caps["platform"]             = @os
         caps["screen-resolution"] = @resolution if @resolution 
         # Allow full page screenshots for IE
         caps["iedriver-version"]  = @iedriver_version if @iedriver_version
@@ -60,12 +63,12 @@ module WatirSauce
         caps["device-orientation"] = @orientation
       when "iPhone"
         caps = Selenium::WebDriver::Remote::Capabilities.iphone
-        caps.platform              = "OS X 10.10"
+        caps["platform"]              = "OS X 10.10"
         caps["deviceName"]         = "iPhone 5s"
         caps["device-orientation"] = @orientation
       when "Safari"
         caps = Selenium::WebDriver::Remote::Capabilities.safari
-        caps.platform = @os
+        caps["platform"] = @os
       else
         raise ArgumentError
       end
@@ -88,6 +91,7 @@ module WatirSauce
         " #{version}" +
         " #{os}".chomp(" ")
     end
+
 
     def build_job_name
       domain = WatirSauce::Config.live_domain
