@@ -95,6 +95,14 @@ module WatirSauce
         raise ArgumentError
       end
 
+      caps[:name] = build_job_name
+
+      # Experimental API settings from 
+      #  - https://docs.saucelabs.com/reference/test-configuration/
+      caps["sauce-advisor"]  = false
+      caps["idleTimeout"]    = 180
+      caps["commandTimeout"] = 180
+
       if SAUCE_MOBILE_BROWSERS.include?(driver)
         caps["appiumVersion"]     = @appium_version
         caps["platformVersion"]   = @version
@@ -102,16 +110,8 @@ module WatirSauce
       else
         caps["platform"] = @os
         caps["version"]  = @version
+        caps["screenResolution"]  = @resolution if @resolution 
       end
-
-      caps["screenResolution"]  = @resolution if @resolution 
-      caps[:name]               = build_job_name
-
-      # Experimental API settings from 
-      #  - https://docs.saucelabs.com/reference/test-configuration/
-      caps["sauce-advisor"]  = false
-      caps["idleTimeout"]    = 180
-      caps["commandTimeout"] = 180
 
       @capabilities = caps
     end
@@ -122,6 +122,11 @@ module WatirSauce
       if SAUCE_MOBILE_BROWSERS.include?(driver)
         @browser_label += ("#{'-' + orientation if orientation == 'landscape'}")
       end
+
+      if @resolution
+        @browser_label += " #{@resolution}"
+      end
+
       @browser_label += " #{version} #{os}".chomp(" ")
     end
 
