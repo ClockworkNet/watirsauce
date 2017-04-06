@@ -51,8 +51,8 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.2)
-    watir-webdriver (0.9.9)
-      selenium-webdriver (>= 2.46.2)
+    watir (6.2.1)
+      selenium-webdriver (~> 3.0)
     websocket (1.2.4)
 
 PLATFORMS
@@ -61,7 +61,8 @@ PLATFORMS
 DEPENDENCIES
   sauce
   sauce-connect
-  watir-webdriver
+  selenium-webdriver
+  watir (>= 6.2.1)
 
 BUNDLED WITH
-   1.10.5
+   1.14.6
