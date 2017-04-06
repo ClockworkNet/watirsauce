@@ -6,7 +6,7 @@ module WatirSauce
     class << self
 
       def load_config(file)
-        @config = YAML.load_file(file)
+        @config = ::YAML.load_file(file)
         register_actions     
       end
 
