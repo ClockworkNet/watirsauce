@@ -65,10 +65,10 @@ module WatirSauce
     def build_capabilities
       case driver
       when SAUCE_ANDROID
-        caps = [ ]
-        caps["deviceName"]         = DEFAULT_ANDROID_DEVICE_NAME
-        caps["browserName"]        = DEFAULT_ANDROID_BROWSER
-        caps["platformName"]       = SAUCE_ANDROID
+        caps = []
+        caps["deviceName"]   = DEFAULT_ANDROID_DEVICE_NAME
+        caps["browserName"]  = DEFAULT_ANDROID_BROWSER
+        caps["platformName"] = SAUCE_ANDROID
       when SAUCE_CHROME
         caps = Selenium::WebDriver::Remote::Capabilities.chrome
       when SAUCE_EDGE
@@ -80,16 +80,15 @@ module WatirSauce
         # Allow full page screenshots for IE
         caps["iedriver-version"]  = @iedriver_version if @iedriver_version
       when SAUCE_IPAD
-        caps = [ ]
-
-        caps["platformName"]          = DEFAULT_IOS_PLATFORM
-        caps["deviceName"]            = DEFAULT_IOS_IPAD_DEVICE_NAME
-        caps["browserName"]           = DEFAULT_IOS_BROWSER
+        caps = []
+        caps["platformName"] = DEFAULT_IOS_PLATFORM
+        caps["deviceName"]   = DEFAULT_IOS_IPAD_DEVICE_NAME
+        caps["browserName"]  = DEFAULT_IOS_BROWSER
       when SAUCE_IPHONE
         caps = []
-        caps["platformName"]          = DEFAULT_IOS_PLATFORM
-        caps["deviceName"]            = DEFAULT_IOS_IPHONE_DEVICE_NAME
-        caps["browserName"]           = DEFAULT_IOS_BROWSER
+        caps["platformName"] = DEFAULT_IOS_PLATFORM
+        caps["deviceName"]   = DEFAULT_IOS_IPHONE_DEVICE_NAME
+        caps["browserName"]  = DEFAULT_IOS_BROWSER
       when SAUCE_SAFARI
         caps = Selenium::WebDriver::Remote::Capabilities.safari
       else
@@ -123,10 +122,10 @@ module WatirSauce
     end
 
     def build_browser_label
-      @browser_label = "#{driver.split.join}"
+      @browser_label = driver.split.join
 
       if SAUCE_MOBILE_BROWSERS.include?(driver)
-        @browser_label += ("#{'-' + orientation if orientation == 'landscape'}")
+        @browser_label += " #{orientation}"
       end
 
       if @resolution
