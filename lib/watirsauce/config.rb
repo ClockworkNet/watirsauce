@@ -2,11 +2,15 @@ module WatirSauce
   class Config
 
     DEFAULT_APPIUM_VERSION = "1.6.3"
+    OPTION_DESKTOP_ONLY = "--desktop-only"
+    OPTION_MOBILE_ONLY  = "--mobile-only"
 
     class << self
 
-      def load_config(file)
+      def load_config(file, options)
         @config = ::YAML.load_file(file)
+        @options = options
+        check_options
         register_actions     
       end
 
@@ -68,6 +72,20 @@ module WatirSauce
 
       def browsers
         config["browsers"]
+      end
+
+      def only_desktop?
+        @options.include? OPTION_DESKTOP_ONLY
+      end
+
+      def only_mobile?
+        @options.include? OPTION_MOBILE_ONLY
+      end
+
+      def check_options
+        if @options.include?( OPTION_MOBILE_ONLY ) &&  @options.include?( OPTION_DESKTOP_ONLY)
+          WatirSauce.logger.warn("The options '--mobile-only' or '--desktop-only' cancel out eachother")
+        end
       end
 
       def pages

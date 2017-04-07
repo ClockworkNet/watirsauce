@@ -31,4 +31,7 @@ unless ENV['SAUCE_USERNAME'] && ENV['SAUCE_ACCESS_KEY']
   exit(1)
 end
 
-WatirSauce::Runner.new(ARGV[0])
+filename = ARGV.shift
+options  = ARGV.clone
+
+WatirSauce::Runner.new(filename, options)

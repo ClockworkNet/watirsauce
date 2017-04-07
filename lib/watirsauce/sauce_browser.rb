@@ -14,6 +14,10 @@ module WatirSauce
     
     def start_browser
       if not is_mobile?
+        if Config.only_mobile?
+          WatirSauce.logger.error("MOBILE ONLY - Skipping Desktop: #{browser_label}")
+          return
+        end
         return @browser = ::Watir::Browser.new(
           :remote,
           :url => @target,
@@ -21,6 +25,10 @@ module WatirSauce
         )
       end
 
+      if Config.only_desktop?
+        WatirSauce.logger.error("DESKTOP ONLY - Skipping Mobile: #{browser_label}")
+        return
+      end
       @browser = ::Appium::Driver.new(@caps)
       @browser.start_driver
     end

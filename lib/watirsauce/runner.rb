@@ -5,8 +5,8 @@ module WatirSauce
 
     attr_reader :screenshot_dir
     
-    def initialize(config_file)
-      Config.load_config(config_file)
+    def initialize(config_file, options = [])
+      Config.load_config(config_file, options)
 
       @clients        = WatirSauce::Config.browsers
       @vm_limit       = WatirSauce::Config.vm_limit
