@@ -59,7 +59,7 @@ module WatirSauce
       add_sc_info if WatirSauce::Config.connect?
       @browser = SauceBrowser.new(self)
     rescue
-      WatirSauce.logger.error "Configuration not available: #{original}. Exiting."
+      WatirSauce.logger.error "Invalid browser configuration: #{original}"
     end
 
     def build_capabilities
@@ -114,8 +114,8 @@ module WatirSauce
 
         caps = nested_caps
       else
-        caps["platform"] = @os
-        caps["version"]  = @version
+        caps["platform"]          = @os
+        caps["version"]           = @version
         caps["screenResolution"]  = @resolution if @resolution 
       end
 

@@ -74,7 +74,8 @@ module WatirSauce
     end
 
     def make_screenshot_dir
-      return ::FileUtils.mkdir screenshot_dir unless ::File.directory?(@screenshot_dir)
+      WatirSauce.logger.info("Screenshots will be found in: #{screenshot_dir}")
+      return ::FileUtils.mkdir screenshot_dir unless ::File.directory?(screenshot_dir)
     end
 
     def enable_logging
