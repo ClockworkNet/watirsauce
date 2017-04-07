@@ -1,9 +1,12 @@
 module WatirSauce
   class Config
+
+    DEFAULT_APPIUM_VERSION = "1.6.3"
+
     class << self
 
       def load_config(file)
-        @config = YAML.load_file(file)
+        @config = ::YAML.load_file(file)
         register_actions     
       end
 
@@ -25,6 +28,10 @@ module WatirSauce
 
       def live_domain
         config["live_site"]
+      end
+
+      def screenshot_dir
+        @screenshot_dir ||= "#{live_domain}-#{Time.now.to_i}"
       end
 
       def paths
@@ -53,10 +60,6 @@ module WatirSauce
 
       def registered_actions
         @registered_actions ||= {}
-      end
-
-      def screenshot_dir
-        live_domain
       end
 
       def browsers
@@ -93,7 +96,7 @@ module WatirSauce
       end
 
       def appium_version
-        config["appium_version"] ||= "1.4.13"
+        config["appium_version"] ||= DEFAULT_APPIUM_VERSION
       end
 
     end

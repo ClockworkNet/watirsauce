@@ -12,13 +12,12 @@ module WatirSauce
       @vm_limit       = WatirSauce::Config.vm_limit
       @connect        = WatirSauce::Config.connect?
       @connect_bin    = WatirSauce::Config.sc_binary
-      @screenshot_dir = WatirSauce::Config.live_domain
+      @screenshot_dir = WatirSauce::Config.screenshot_dir
 
       enable_logging 
       setup_tunnel
       setup_browsers
 
-      @screenshot_dir = WatirSauce::Config.live_domain
       make_screenshot_dir
 
       run_browsers
@@ -44,11 +43,12 @@ module WatirSauce
     end
 
     def setup_tunnel
+      return
       return if WatirSauce::Config.connected?
       return unless @connect && @connect_bin
-      @tunnel = ::Sauce::Connect.new({sauce_connect_4_executable: @connect_bin})
-      @tunnel.connect
-      @tunnel.wait_until_ready
+      # @tunnel = ::Sauce::Connect.new({sauce_connect_4_executable: @connect_bin})
+      # @tunnel.connect
+      # @tunnel.wait_until_ready
     rescue
       WatirSauce.logger.error "Sauce Connect didn't connect, exiting."
       exit 1
@@ -74,7 +74,8 @@ module WatirSauce
     end
 
     def make_screenshot_dir
-      ::FileUtils.mkdir screenshot_dir unless ::File.directory?(@screenshot_dir)
+      WatirSauce.logger.info("Screenshots will be found in: #{screenshot_dir}")
+      return ::FileUtils.mkdir screenshot_dir unless ::File.directory?(screenshot_dir)
     end
 
     def enable_logging

@@ -2,12 +2,13 @@ Watered-down sauces are often gross. So is FED testing. WatirSauce tries to make
 
 ## What is it?
 
-Levaraging [SauceLabs](https://saucelabs.com) and WatirWebdriver, WatirSauce allows you to configure a YAML file, run a command, and take screenshots in all of your favorite browsers. It also supports parallel execution. This reduces the amount of time required to test 2 pages on 15 browsers down from 45 minutes to less than 5.
+Levaraging [SauceLabs](https://saucelabs.com) and Watir, WatirSauce allows you to configure a YAML file, run a command, and take screenshots in all of your favorite browsers. It also supports parallel execution. This reduces the amount of time required to test 2 pages on 15 browsers down from 45 minutes to less than 5.
 
 ## Requirements
 
 * SauceLabs account
 * OS X, possibly Linux. Maybe Windows?
+* Ruby 2.3+ 
 * The provided code
 
 ## Installation
@@ -30,7 +31,7 @@ Two things must be configured to use WatirSauce:
 
 * Environment Variables
 
-Update your `~/.bash_profile` file with the following lines, using the values for your Sauce Account.
+Update your `~/.bash_profile` or system environment with the following values from your Sauce Lbas account. In macOS/Linux, it looks like this:
 
     export SAUCE_USERNAME=<your_sauce_username>
     export SAUCE_ACCESS_KEY=<your_sauce_access_key>
@@ -59,4 +60,4 @@ See LICENSE.
 
 ## Credits
 
- * [Andie Leaf](https://github.com/avleaf) - author, maintainer
+ * [Sonja Q Leaf](https://github.com/sonjaq) - author, maintainer

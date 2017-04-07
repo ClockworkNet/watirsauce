@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
 
-gem 'watir-webdriver'
-gem 'sauce'
+gem 'watir', '>=6.2.1'
+gem 'selenium-webdriver'
 gem 'sauce-connect'  

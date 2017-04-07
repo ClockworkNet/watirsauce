@@ -12,7 +12,7 @@ module WatirSauce
     end
     
     def start_browser      
-      @browser = Watir::Browser.new(
+      @browser = ::Watir::Browser.new(
         :remote,
         :url => @target,
         :desired_capabilities => @caps

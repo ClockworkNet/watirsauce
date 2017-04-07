@@ -1,93 +1,135 @@
 module WatirSauce
   class BrowserFactory
 
+    ## Default Capability options
+    DEFAULT_ORIENTATION = "portrait"
+    DEFAULT_ANDROID_DEVICE_NAME = "Android Emulator"
+    DEFAULT_ANDROID_BROWSER = "Chrome"
+    DEFAULT_IOS_BROWSER = "Safari"
+    DEFAULT_IOS_IPHONE_DEVICE_NAME = "iPhone Simulator"
+    DEFAULT_IOS_IPAD_DEVICE_NAME = "iPad Simulator"
+
+    ## Default Browser Strings
+    SAUCE_ANDROID = "android"
+    SAUCE_CHROME  = "chrome"
+    SAUCE_EDGE    = "edge"
+    SAUCE_FIREFOX = "firefox"
+    SAUCE_IE      = "internet explorer"
+    SAUCE_IPAD    = "ipad"
+    SAUCE_IPHONE  = "iphone"
+    SAUCE_SAFARI  = "safari"
+
+    SAUCE_MOBILE_BROWSERS  = [
+      SAUCE_ANDROID, 
+      SAUCE_IPAD, 
+      SAUCE_IPHONE
+    ]
+    
+    SAUCE_DESKTOP_BROWSERS = [
+      SAUCE_CHROME, 
+      SAUCE_EDGE, 
+      SAUCE_FIREFOX, 
+      SAUCE_IE, 
+      SAUCE_SAFARI
+    ]
+
+
     attr_reader :browser, :browser_label, :capabilities, 
-                :driver, :orientation, :os, :target, :version
+                :driver, :orientation, :original, :os, :target, :version
 
     def initialize(req_browser)
-      @driver           = req_browser["driver"]
+      @original         = req_browser
+      @driver           = req_browser["driver"].downcase
       @os               = req_browser["os"]             || nil
       @version          = req_browser["version"].to_s   || nil
-      @orientation      = req_browser["orientation"]    || "portrait"
+      @orientation      = req_browser["orientation"]    || DEFAULT_ORIENTATION
       @target           = req_browser["target"]         || WatirSauce::Config.target
-      @device_name      = req_browser["device_name"]    || nil
       @iedriver_version = req_browser["iedriver"]       || nil
       @appium_version   = req_browser["appium_version"] || WatirSauce::Config.appium_version
       @resolution       = req_browser["resolution"]     || nil
       @tunnel_owner     = req_browser['sc_owner']       || nil
 
+      setup_capabilities
+    end
+
+    def setup_capabilities
       build_browser_label
       build_capabilities
 
       add_sc_info if WatirSauce::Config.connect?
       @browser = SauceBrowser.new(self)
     rescue
-      WatirSauce.logger.error "Configuration not available: #{req_browser}. Exiting."
-      exit 1
+      WatirSauce.logger.error "Invalid browser configuration: #{original}"
     end
 
     def build_capabilities
-      case @driver
-      when "Android"
+      case driver
+      when SAUCE_ANDROID
         caps = Selenium::WebDriver::Remote::Capabilities.android
-        caps["deviceName"]         = @device_name if @device_name
-        caps["platform"]           = "Linux"
-        caps["device-orientation"] = @orientation
-      when "Appium"
-        caps = Selenium::WebDriver::Remote::Capabilities.android
-        caps["appiumVersion"]      = @appium_version
-        caps["deviceName"]         = "Android Emulator"
-        caps["device-orientation"] = @orientation
-        caps["browserName"]        = "Browser"
-        caps["platformVersion"]    = @version
-        caps["platformName"]       = "Android"
-      when "Chrome"
+        caps["deviceName"]         = DEFAULT_ANDROID_DEVICE_NAME
+        caps["browserName"]        = DEFAULT_ANDROID_BROWSER
+        caps["platformName"]       = SAUCE_ANDROID
+      when SAUCE_CHROME
         caps = Selenium::WebDriver::Remote::Capabilities.chrome
-        caps.platform = @os
-      when "Firefox"
+      when SAUCE_EDGE
+        caps = Selenium::WebDriver::Remote::Capabilities.edge
+      when SAUCE_FIREFOX
         caps = Selenium::WebDriver::Remote::Capabilities.firefox
-        caps.platform = @os
-      when "Internet Explorer"
+      when SAUCE_IE
         caps = Selenium::WebDriver::Remote::Capabilities.internet_explorer
-        caps.platform             = @os
-        caps["screen-resolution"] = @resolution if @resolution 
         # Allow full page screenshots for IE
         caps["iedriver-version"]  = @iedriver_version if @iedriver_version
-      when "iPad"
+      when SAUCE_IPAD
+        caps = Selenium::WebDriver::Remote::Capabilities.ipad
+        caps["platformName"]          = DEFAULT_IOS_PLATFORM
+        caps["deviceName"]            = DEFAULT_IOS_IPAD_DEVICE_NAME
+        caps["browserName"]           = DEFAULT_IOS_BROWSER
+      when SAUCE_IPHONE
         caps = Selenium::WebDriver::Remote::Capabilities.iphone
-        caps["platform"]           = "OS X 10.10"
-        caps["deviceName"]         = "iPad Air" # reconsider simulator
-        caps["device-orientation"] = @orientation
-      when "iPhone"
-        caps = Selenium::WebDriver::Remote::Capabilities.iphone
-        caps.platform              = "OS X 10.10"
-        caps["deviceName"]         = "iPhone 5s"
-        caps["device-orientation"] = @orientation
-      when "Safari"
+        caps["platformName"]          = DEFAULT_IOS_PLATFORM
+        caps["deviceName"]            = DEFAULT_IOS_IPHONE_DEVICE_NAME
+        caps["browserName"]           = DEFAULT_IOS_BROWSER
+      when SAUCE_SAFARI
         caps = Selenium::WebDriver::Remote::Capabilities.safari
-        caps.platform = @os
       else
         raise ArgumentError
       end
 
-      caps["version"]       = @version if @version
-      caps[:name]           = build_job_name
-      
+      caps[:name] = build_job_name
+
       # Experimental API settings from 
       #  - https://docs.saucelabs.com/reference/test-configuration/
       caps["sauce-advisor"]  = false
       caps["idleTimeout"]    = 180
       caps["commandTimeout"] = 180
 
+      if SAUCE_MOBILE_BROWSERS.include?(driver)
+        caps["appiumVersion"]     = @appium_version
+        caps["platformVersion"]   = @version
+        caps["deviceOrientation"] = @orientation 
+      else
+        caps["platform"]          = @os
+        caps["version"]           = @version
+        caps["screenResolution"]  = @resolution if @resolution 
+      end
+
       @capabilities = caps
     end
 
     def build_browser_label
-      @browser_label = "#{driver.split.join}" +
-        ("#{'-' + orientation if orientation == 'landscape'}") +
-        " #{version}" +
-        " #{os}".chomp(" ")
+      @browser_label = "#{driver.split.join}"
+
+      if SAUCE_MOBILE_BROWSERS.include?(driver)
+        @browser_label += ("#{'-' + orientation if orientation == 'landscape'}")
+      end
+
+      if @resolution
+        @browser_label += " #{@resolution}"
+      end
+
+      @browser_label += " #{version} #{os}".chomp(" ")
     end
+
 
     def build_job_name
       domain = WatirSauce::Config.live_domain
