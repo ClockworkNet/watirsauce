@@ -8,6 +8,7 @@ Levaraging [SauceLabs](https://saucelabs.com) and Watir, WatirSauce allows you t
 
 * SauceLabs account
 * OS X, possibly Linux. Maybe Windows?
+* Ruby 2.3+ 
 * The provided code
 
 ## Installation
