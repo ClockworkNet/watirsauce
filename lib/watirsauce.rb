@@ -1,3 +1,4 @@
+require "appium_lib"
 require "logger"
 require "selenium-webdriver"
 require "thread"

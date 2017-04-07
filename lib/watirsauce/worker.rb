@@ -27,7 +27,7 @@ module WatirSauce
 
       begin
         @full_paths.each do |path|
-          @browser.browser.goto path
+          @browser.goto path
           execute_registered_actions
           capture_screen
           WatirSauce.logger.info "#{browser_label} - #{browser.url}" # test code

@@ -65,7 +65,7 @@ module WatirSauce
     def build_capabilities
       case driver
       when SAUCE_ANDROID
-        caps = Selenium::WebDriver::Remote::Capabilities.android
+        caps = { }
         caps["deviceName"]         = DEFAULT_ANDROID_DEVICE_NAME
         caps["browserName"]        = DEFAULT_ANDROID_BROWSER
         caps["platformName"]       = SAUCE_ANDROID
@@ -80,12 +80,13 @@ module WatirSauce
         # Allow full page screenshots for IE
         caps["iedriver-version"]  = @iedriver_version if @iedriver_version
       when SAUCE_IPAD
-        caps = Selenium::WebDriver::Remote::Capabilities.ipad
+        caps = { }
+
         caps["platformName"]          = DEFAULT_IOS_PLATFORM
         caps["deviceName"]            = DEFAULT_IOS_IPAD_DEVICE_NAME
         caps["browserName"]           = DEFAULT_IOS_BROWSER
       when SAUCE_IPHONE
-        caps = Selenium::WebDriver::Remote::Capabilities.iphone
+        caps = []
         caps["platformName"]          = DEFAULT_IOS_PLATFORM
         caps["deviceName"]            = DEFAULT_IOS_IPHONE_DEVICE_NAME
         caps["browserName"]           = DEFAULT_IOS_BROWSER
@@ -106,7 +107,12 @@ module WatirSauce
       if SAUCE_MOBILE_BROWSERS.include?(driver)
         caps["appiumVersion"]     = @appium_version
         caps["platformVersion"]   = @version
-        caps["deviceOrientation"] = @orientation 
+        caps["deviceOrientation"] = @orientation
+
+        nested_caps = { wait: 60, wait_timeout: 20, wait_interval: 1 }
+        nested_caps["caps"] = caps
+
+        caps = nested_caps
       else
         caps["platform"] = @os
         caps["version"]  = @version

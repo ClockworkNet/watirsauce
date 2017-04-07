@@ -8,19 +8,44 @@ module WatirSauce
       @username, @access_key  = WatirSauce::Config.credentials
       @browser_label          = browser_factory.browser_label
       @target                 = browser_factory.target 
+      
       self
     end
     
-    def start_browser      
-      @browser = ::Watir::Browser.new(
-        :remote,
-        :url => @target,
-        :desired_capabilities => @caps
-      )
+    def start_browser
+      if not is_mobile?
+        return @browser = ::Watir::Browser.new(
+          :remote,
+          :url => @target,
+          :desired_capabilities => @caps
+        )
+      end
+
+      @browser = ::Appium::Driver.new(@caps)
+      @browser.start_driver
+    end
+
+    def goto(url)
+      if is_mobile?
+        @browser.driver.navigate.to(url)
+      else
+        @browser.goto(url)
+      end
     end
 
     def destroy_browser
-      @browser.quit
+      if is_mobile?
+        @browser.driver_quit
+      else
+        @browser.quit
+      end
+    rescue
+      # No-op if quit of browser fails
+      nil
+    end
+
+    def is_mobile?
+      @caps['caps'] ? true : false
     end
 
     def method_missing(meth, *args, &blk)
@@ -28,7 +53,11 @@ module WatirSauce
     end
 
     def screenshot_save(path)
-      @browser.screenshot.save(path)
+      if not is_mobile?
+        @browser.screenshot.save(path)
+      else
+        @browser.save_screenshot(path)
+      end
     end
 
     def session_id
