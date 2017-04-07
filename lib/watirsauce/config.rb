@@ -31,7 +31,7 @@ module WatirSauce
       end
 
       def screenshot_dir
-        @screenshot_dir ||= live_domain + "-" + Time.now.to_i.to_s
+        @screenshot_dir ||= "#{live_domain}-#{Time.now.to_i}"
       end
 
       def paths
@@ -60,10 +60,6 @@ module WatirSauce
 
       def registered_actions
         @registered_actions ||= {}
-      end
-
-      def screenshot_dir
-        live_domain
       end
 
       def browsers
