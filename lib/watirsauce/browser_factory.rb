@@ -65,7 +65,7 @@ module WatirSauce
     def build_capabilities
       case driver
       when SAUCE_ANDROID
-        caps = { }
+        caps = [ ]
         caps["deviceName"]         = DEFAULT_ANDROID_DEVICE_NAME
         caps["browserName"]        = DEFAULT_ANDROID_BROWSER
         caps["platformName"]       = SAUCE_ANDROID
@@ -80,7 +80,7 @@ module WatirSauce
         # Allow full page screenshots for IE
         caps["iedriver-version"]  = @iedriver_version if @iedriver_version
       when SAUCE_IPAD
-        caps = { }
+        caps = [ ]
 
         caps["platformName"]          = DEFAULT_IOS_PLATFORM
         caps["deviceName"]            = DEFAULT_IOS_IPAD_DEVICE_NAME
