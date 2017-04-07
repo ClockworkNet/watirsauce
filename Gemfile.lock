@@ -59,7 +59,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  sauce
   sauce-connect
   selenium-webdriver
   watir (>= 6.2.1)
