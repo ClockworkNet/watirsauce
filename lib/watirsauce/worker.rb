@@ -26,7 +26,7 @@ module WatirSauce
 
       begin
         @full_paths.each do |path|
-          @browser.goto path
+          @browser.goto(path)
           execute_registered_actions
           capture_screen
           WatirSauce.logger.info "#{browser_label} - #{browser.url}" # test code
@@ -92,7 +92,7 @@ module WatirSauce
 
       # path = browser.browser.url.match(live_domain).post_match
       parser = URI::Parser.new
-      path = parser.parse(browser.browser.url).path
+      path = parser.parse(browser.current_url).path
       path = "home" if path == "/"
 
       if safe == false
