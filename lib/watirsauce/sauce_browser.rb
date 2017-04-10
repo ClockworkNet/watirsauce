@@ -1,13 +1,14 @@
 module WatirSauce
   class SauceBrowser
 
-    attr_reader :browser, :browser_label, :session_id
+    attr_reader :browser, :browser_label, :current_url, :session_id
 
     def initialize(browser_factory)
       @caps                   = browser_factory.capabilities
       @username, @access_key  = WatirSauce::Config.credentials
       @browser_label          = browser_factory.browser_label
       @target                 = browser_factory.target 
+      @current_url            = nil;
       
       self
     end
@@ -34,6 +35,7 @@ module WatirSauce
     end
 
     def goto(url)
+      @current_url = url;
       if is_mobile?
         @browser.driver.navigate.to(url)
       else
