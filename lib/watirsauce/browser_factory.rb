@@ -4,7 +4,8 @@ module WatirSauce
     ## Default Capability options
     DEFAULT_ORIENTATION = "portrait"
     DEFAULT_ANDROID_DEVICE_NAME = "Android Emulator"
-    DEFAULT_ANDROID_BROWSER = "Chrome"
+    DEFAULT_ANDROID_BROWSER_6 = "Chrome"
+    DEFAULT_ANDROID_BROWSER = "Browser"
     DEFAULT_IOS_PLATFORM = "iOS"
     DEFAULT_IOS_BROWSER = "Safari"
     DEFAULT_IOS_IPHONE_DEVICE_NAME = "iPhone Simulator"
@@ -41,7 +42,7 @@ module WatirSauce
     def initialize(req_browser)
       @original         = req_browser
       @driver           = req_browser["driver"].downcase
-      @os               = req_browser["os"]             || nil
+      @os               = req_browser["os"].to_s           || nil
       @version          = req_browser["version"].to_s   || nil
       @orientation      = req_browser["orientation"]    || DEFAULT_ORIENTATION
       @target           = req_browser["target"]         || WatirSauce::Config.target
@@ -50,7 +51,19 @@ module WatirSauce
       @resolution       = req_browser["resolution"]     || nil
       @tunnel_owner     = req_browser['sc_owner']       || nil
 
+      fix_mobile_settings
       setup_capabilities
+      WatirSauce.logger.info("Browser configured: #{driver} #{os} #{version}")
+    end
+
+    def fix_mobile_settings
+      if SAUCE_MOBILE_BROWSERS.include?(driver)
+        if (version == "" || nil ) && (os == "" || nil)
+          WatirSauce.logger.warn("Either 'os' or 'version' is required for mobile browsers to work correctly")
+        end
+        @version = @os if @version == "" || nil 
+        @os = @version if @os == "" || nil
+      end
     end
 
     def setup_capabilities
@@ -61,6 +74,7 @@ module WatirSauce
       @browser = SauceBrowser.new(self)
     rescue Exception => e
       WatirSauce.logger.error(e.backtrace.join("\n\t\t\t\t"))
+      require "pry";binding.pry # temporary debug statment
       WatirSauce.logger.error "Invalid browser configuration: #{original}"
     end
 
@@ -69,7 +83,7 @@ module WatirSauce
       when SAUCE_ANDROID
         caps = {}
         caps["deviceName"]   = DEFAULT_ANDROID_DEVICE_NAME
-        caps["browserName"]  = DEFAULT_ANDROID_BROWSER
+        caps["browserName"]  = @version.to_i > 5 ? DEFAULT_ANDROID_BROWSER_6 : DEFAULT_ANDROID_BROWSER
         caps["platformName"] = SAUCE_ANDROID
       when SAUCE_CHROME
         caps = Selenium::WebDriver::Remote::Capabilities.chrome
@@ -101,9 +115,9 @@ module WatirSauce
 
       # Experimental API settings from 
       #  - https://docs.saucelabs.com/reference/test-configuration/
-      caps["sauce-advisor"]  = false
-      caps["idleTimeout"]    = 180
-      caps["commandTimeout"] = 180
+      # caps["sauce-advisor"]  = false
+      # caps["idleTimeout"]    = 180
+      # caps["commandTimeout"] = 180
 
       if SAUCE_MOBILE_BROWSERS.include?(driver)
         caps["appiumVersion"]     = @appium_version
@@ -134,7 +148,13 @@ module WatirSauce
         @browser_label += " #{@resolution}"
       end
 
-      @browser_label += " #{version} #{os}".chomp(" ")
+      if version == os
+        @browser_label += " #{version}".chomp(" ")
+      else
+        @browser_label += " #{version} #{os}".chomp(" ")
+      end
+
+      @browser_label
     end
 
 
