@@ -29,7 +29,7 @@ module WatirSauce
           @browser.goto(path)
           execute_registered_actions
           capture_screen
-          WatirSauce.logger.info "#{browser_label} - #{browser.url}" # test code
+          WatirSauce.logger.info "#{browser_label} - #{browser.current_url}"
         end
       rescue => e
         WatirSauce.logger.error "Something went wrong with #{browser_label}."
