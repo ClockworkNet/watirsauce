@@ -31,7 +31,7 @@ Two things must be configured to use WatirSauce:
 
 * Environment Variables
 
-Update your `~/.bash_profile` or system environment with the following values from your Sauce Lbas account. In macOS/Linux, it looks like this:
+Update your `~/.bash_profile` or system environment with the following values from your Sauce Labs account. In macOS/Linux, it looks like this:
 
     export SAUCE_USERNAME=<your_sauce_username>
     export SAUCE_ACCESS_KEY=<your_sauce_access_key>
