@@ -61,10 +61,10 @@ module WatirSauce
     end
 
     def screenshot_save(path)
-      if not is_mobile?
-        @browser.screenshot.save(path)
+      if is_mobile?
+        @browser.screenshot(path)
       else
-        @browser.save_screenshot(path)
+        @browser.screenshot.save(path)
       end
     end
 

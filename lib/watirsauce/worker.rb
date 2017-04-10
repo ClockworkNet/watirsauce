@@ -44,6 +44,7 @@ module WatirSauce
     private
 
     def execute_registered_actions
+      return if registered_actions.size == 0
       path = trimmed_path
       # If the registered action exists, take a screenshot, then
       # use instance_eval to execute the totally arbitrary, unsafe code
@@ -97,7 +98,7 @@ module WatirSauce
       if safe == false
         path
       else
-        path = path.gsub(/(\/|\.)/,"--").gsub(/(^-+|-+$)/,"")
+        path = path.gsub(/(\/|\.)/,"--").gsub(/(^-+|-+$)/,"").gsub(/#/,"")
       end
 
       path

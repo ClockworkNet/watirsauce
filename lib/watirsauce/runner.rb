@@ -43,12 +43,10 @@ module WatirSauce
     end
 
     def setup_tunnel
-      return
+      WatirSauce.logger.error("Sauce Tunnel support is currently not working. Sorry!")
+      return # Sauce Connect needs to be rethought
       return if WatirSauce::Config.connected?
       return unless @connect && @connect_bin
-      # @tunnel = ::Sauce::Connect.new({sauce_connect_4_executable: @connect_bin})
-      # @tunnel.connect
-      # @tunnel.wait_until_ready
     rescue
       WatirSauce.logger.error "Sauce Connect didn't connect, exiting."
       exit 1
@@ -79,7 +77,7 @@ module WatirSauce
     end
 
     def enable_logging
-      WatirSauce.logger.info "Initializing WatirSauce #{VERSION}"
+      WatirSauce.logger.info "WatirSauce #{VERSION}"
     end
 
     def cleanup

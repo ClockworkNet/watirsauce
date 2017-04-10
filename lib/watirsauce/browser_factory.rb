@@ -5,6 +5,7 @@ module WatirSauce
     DEFAULT_ORIENTATION = "portrait"
     DEFAULT_ANDROID_DEVICE_NAME = "Android Emulator"
     DEFAULT_ANDROID_BROWSER = "Chrome"
+    DEFAULT_IOS_PLATFORM = "iOS"
     DEFAULT_IOS_BROWSER = "Safari"
     DEFAULT_IOS_IPHONE_DEVICE_NAME = "iPhone Simulator"
     DEFAULT_IOS_IPAD_DEVICE_NAME = "iPad Simulator"
@@ -58,14 +59,15 @@ module WatirSauce
 
       add_sc_info if WatirSauce::Config.connect?
       @browser = SauceBrowser.new(self)
-    rescue
+    rescue Exception => e
+      WatirSauce.logger.error(e.backtrace.join("\n\t\t\t\t"))
       WatirSauce.logger.error "Invalid browser configuration: #{original}"
     end
 
     def build_capabilities
       case driver
       when SAUCE_ANDROID
-        caps = []
+        caps = {}
         caps["deviceName"]   = DEFAULT_ANDROID_DEVICE_NAME
         caps["browserName"]  = DEFAULT_ANDROID_BROWSER
         caps["platformName"] = SAUCE_ANDROID
@@ -80,12 +82,12 @@ module WatirSauce
         # Allow full page screenshots for IE
         caps["iedriver-version"]  = @iedriver_version if @iedriver_version
       when SAUCE_IPAD
-        caps = []
+        caps = {}
         caps["platformName"] = DEFAULT_IOS_PLATFORM
         caps["deviceName"]   = DEFAULT_IOS_IPAD_DEVICE_NAME
         caps["browserName"]  = DEFAULT_IOS_BROWSER
       when SAUCE_IPHONE
-        caps = []
+        caps = {}
         caps["platformName"] = DEFAULT_IOS_PLATFORM
         caps["deviceName"]   = DEFAULT_IOS_IPHONE_DEVICE_NAME
         caps["browserName"]  = DEFAULT_IOS_BROWSER

@@ -54,6 +54,8 @@ module WatirSauce
       def register_actions
         # Ensure that registered_actions exists or is an empty hash
         registered_actions
+
+        return if actions.size == 0
         # Iterate through the actions and add it to registered actions
         # TODO: Support an "all" || :all option
         # TODO: Support a post-action-suffix
