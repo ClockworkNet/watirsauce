@@ -1,13 +1,14 @@
 module WatirSauce
   class SauceBrowser
 
-    attr_reader :browser, :browser_label, :session_id
+    attr_reader :browser, :browser_label, :current_url, :session_id
 
     def initialize(browser_factory)
       @caps                   = browser_factory.capabilities
       @username, @access_key  = WatirSauce::Config.credentials
       @browser_label          = browser_factory.browser_label
       @target                 = browser_factory.target 
+      @current_url            = nil
       self
     end
     
@@ -17,6 +18,11 @@ module WatirSauce
         :url => @target,
         :desired_capabilities => @caps
       )
+    end
+
+    def goto(url)
+      @current_url = url
+      @browser.goto(url)
     end
 
     def destroy_browser
